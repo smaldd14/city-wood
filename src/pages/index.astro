@@ -1,50 +1,222 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import Base from "../layouts/Base.astro";
+import { BUSINESS, LAUNCH, PLANS, OFFER } from "../config";
+
+const title = `${BUSINESS.name} | Firewood delivery in Hoboken`;
+const description =
+	"Seasoned hardwood firewood delivered to your Hoboken apartment on a schedule. No more hauling bundles home from the grocery store. Pause or cancel anytime.";
+
+const faqs = [
+	{
+		q: "What day do you deliver?",
+		a: `${OFFER.deliveryWindow}. Your first delivery date is confirmed by email after you subscribe.`,
+	},
+	{
+		q: "Can I skip, pause or cancel?",
+		a: "Yes. Email or text us before your next delivery to skip a week or pause, and cancel anytime. Cancelling stops future charges; there's no contract and no fee.",
+	},
+	{
+		q: "How do you get into my building?",
+		a: "Tell us at checkout how access works: doorman, buzzer, package room, elevator or stairs. If your building has a doorman, we can leave wood with them or bring it up, whichever your building allows.",
+	},
+	{
+		q: "Where do you put the wood?",
+		a: "At your apartment door by default. If you'd rather we stack it inside (on a rack, in a closet, next to the fireplace), add that to your delivery notes and we'll arrange it with you.",
+	},
+	{
+		q: "Do you deliver outside Hoboken?",
+		a: "Not yet. For now we only deliver in Hoboken (07030). Join the waitlist below and we'll let you know if we come to your area.",
+	},
+	{
+		q: "Is this for gas fireplaces?",
+		a: "No. Our wood is only for working, wood-burning fireplaces. Never burn wood in a gas, ventless or decorative fireplace. If you're not sure whether yours is safe to use, check with your building or a chimney professional first.",
+	},
+	{
+		q: "How does this compare to buying at the grocery store?",
+		a: "Our bundles are the same size as a typical grocery-store bundle, but we bring them to your door so you don't have to carry them home.",
+	},
+];
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>🧑‍🚀 Hello, Astronaut!</h1>
-			<p>
-				Welcome to the official <a href="https://astro.build/">Astro</a> blog starter template. This
-				template serves as a lightweight, minimally-styled starting point for anyone looking to build
-				a personal website, blog, or portfolio with Astro.
+<Base title={title} description={description}>
+	<header class="hero">
+		<nav class="wrap nav">
+			<a href="/" class="brand" aria-label={`${BUSINESS.name} home`}>
+				<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2c1 3.5-2 5-2 8a2 2 0 0 0 4 0c0-1-.5-2-.5-2C16 9.5 18 12 18 15a6 6 0 0 1-12 0c0-5 6-7 6-13Z"/></svg>
+				{BUSINESS.name}
+			</a>
+			<a href="#plans" class="nav-cta">See plans</a>
+		</nav>
+		<div class="wrap hero-body">
+			<p class="eyebrow">Hoboken firewood delivery</p>
+			<h1>Firewood delivered to your Hoboken apartment.</h1>
+			<p class="lede">
+				Stop carrying bundles home from the grocery store. Pick a plan and we'll bring seasoned hardwood to your door on a regular schedule, billed automatically. Pause or cancel anytime.
 			</p>
+			<div class="hero-ctas">
+				<a href="#plans" class="btn btn-primary" data-track="HeroCTA">Choose a plan</a>
+				<a href="#how" class="btn btn-ghost">How it works</a>
+			</div>
+			{LAUNCH.firstDelivery && (
+				<p class="launch-pill">First deliveries: <strong>{LAUNCH.firstDelivery}</strong></p>
+			)}
+		</div>
+	</header>
+
+	<main>
+		<section id="how" class="wrap section">
+			<h2>How it works</h2>
+			<ol class="steps">
+				<li>
+					<span class="step-n">1</span>
+					<h3>Pick a plan</h3>
+					<p>Choose how much wood you burn. Billing is automatic and secure.</p>
+				</li>
+				<li>
+					<span class="step-n">2</span>
+					<h3>Tell us where</h3>
+					<p>Your building, unit and how to get in. Doorman, buzzer, stairs or elevator, we'll work with it.</p>
+				</li>
+				<li>
+					<span class="step-n">3</span>
+					<h3>Light a fire</h3>
+					<p>Wood shows up on schedule. Skip, pause or cancel with a text or email.</p>
+				</li>
+			</ol>
+		</section>
+
+		<section id="plans" class="section plans-section">
+			<div class="wrap">
+				<h2>Plans</h2>
+				<p class="section-lede">Billed monthly. No contract. Delivery is included.</p>
+				<div class="plans">
+					{PLANS.map((plan) => (
+						<article class:list={["plan", { featured: plan.featured }]}>
+							{plan.featured && <p class="badge">Recommended</p>}
+							<h3>{plan.name}</h3>
+							<p class="price"><span class="amt">${plan.price}</span><span class="per">/month</span></p>
+							<ul>
+								<li><strong>{plan.bundlesPerMonth} bundles</strong> a month</li>
+								<li>{plan.cadence}</li>
+								<li>{plan.bestFor}</li>
+								<li>Delivered to your door</li>
+							</ul>
+							{/* Stripe placeholder: swap href for the plan's Payment Link later. */}
+							<a class:list={["btn btn-block", plan.featured ? "btn-primary" : "btn-outline"]} href="#area" data-track={`PlanInterest-${plan.id}`}>
+								Notify me at launch
+							</a>
+						</article>
+					))}
+				</div>
+				<p class="fine">
+					Hoboken (07030) addresses only. Prices include delivery. Sign-ups open soon. Join the list below and we'll email you the day they do.
+				</p>
+			</div>
+		</section>
+
+		<section id="what" class="wrap section">
+			<h2>What you get</h2>
+			<dl class="details">
+				<div><dt>The wood</dt><dd>{OFFER.wood}</dd></div>
+				<div><dt>Bundle size</dt><dd>{OFFER.bundleSize}</dd></div>
+				<div><dt>Delivery</dt><dd>{OFFER.delivery}</dd></div>
+				<div><dt>When</dt><dd>{OFFER.deliveryWindow}</dd></div>
+				<div><dt>Extras</dt><dd>{OFFER.addOns}</dd></div>
+			</dl>
+		</section>
+
+		{LAUNCH.firstDelivery && (
+			<section id="launch" class="wrap section">
+				<div class="callout">
+					<h2>Founding members</h2>
+					<p>
+						We're just getting started in Hoboken. First deliveries go out <strong>{LAUNCH.firstDelivery}</strong>. {LAUNCH.refundPolicy}
+					</p>
+				</div>
+			</section>
+		)}
+
+		<section id="area" class="section area-section">
+			<div class="wrap area">
+				<div>
+					<h2>Hoboken only, for now</h2>
+					<p>
+						We deliver in {BUSINESS.serviceArea} only. Sign-ups open soon: leave your email and ZIP code and we'll let you know the day they do. Outside Hoboken? Sign up too, and we'll tell you if we come to your area.
+					</p>
+				</div>
+				<form class="waitlist" id="waitlist" action="/api/waitlist" method="post">
+					<label>
+						<span>Email</span>
+						<input type="email" name="email" required autocomplete="email" />
+					</label>
+					<label>
+						<span>ZIP code</span>
+						<input type="text" name="zip" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" required autocomplete="postal-code" />
+					</label>
+					<input type="text" name="company" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true" />
+					<button class="btn btn-primary" type="submit">Join the waitlist</button>
+					<p class="form-msg" role="status" aria-live="polite"></p>
+				</form>
+			</div>
+		</section>
+
+		<section id="faq" class="wrap section">
+			<h2>Questions</h2>
+			<div class="faq">
+				{faqs.map((f) => (
+					<details>
+						<summary>{f.q}</summary>
+						<p>{f.a}</p>
+					</details>
+				))}
+			</div>
+		</section>
+	</main>
+
+	<footer class="footer">
+		<div class="wrap">
+			<p class="brand-foot">{BUSINESS.name}</p>
 			<p>
-				This template comes with a few integrations already configured in your
-				<code>astro.config.mjs</code> file. You can customize your setup with
-				<a href="https://astro.build/integrations">Astro Integrations</a> to add tools like Tailwind,
-				React, or Vue to your project.
+				Questions? Email <a href={`mailto:${BUSINESS.email}`}>{BUSINESS.email}</a>
+				{BUSINESS.phone && <> or text <a href={`sms:${BUSINESS.phone.replace(/[^0-9+]/g, "")}`}>{BUSINESS.phone}</a></>}
 			</p>
-			<p>Here are a few ideas on how to get started with the template:</p>
-			<ul>
-				<li>Edit this page in <code>src/pages/index.astro</code></li>
-				<li>Edit the site header items in <code>src/components/Header.astro</code></li>
-				<li>Add your name to the footer in <code>src/components/Footer.astro</code></li>
-				<li>Check out the included blog posts in <code>src/content/blog/</code></li>
-				<li>Customize the blog post page layout in <code>src/layouts/BlogPost.astro</code></li>
-			</ul>
-			<p>
-				Have fun! If you get stuck, remember to <a href="https://docs.astro.build/"
-					>read the docs
-				</a> or <a href="https://astro.build/chat">join us on Discord</a> to ask questions.
-			</p>
-			<p>
-				Looking for a blog template with a bit more personality? Check out <a
-					href="https://github.com/Charca/astro-blog-template"
-					>astro-blog-template
-				</a> by <a href="https://twitter.com/Charca">Maxi Ferreira</a>.
-			</p>
-		</main>
-		<Footer />
-	</body>
-</html>
+			<p class="fine">Serving {BUSINESS.serviceArea}. For wood-burning fireplaces only.</p>
+		</div>
+	</footer>
+
+	<script is:inline define:vars={{ contactEmail: BUSINESS.email }}>
+		(function () {
+			var attr = {};
+			try { attr = JSON.parse(localStorage.getItem("cw_attr") || "{}"); } catch (e) {}
+
+			var ref = [attr.utm_source || attr.ref || "direct", attr.utm_campaign || "", attr.utm_content || attr.promo || ""].filter(Boolean).join("__");
+
+			document.querySelectorAll("[data-track]").forEach(function (el) {
+				el.addEventListener("click", function () { if (window.cwTrack) window.cwTrack(el.dataset.track); });
+			});
+
+			var form = document.getElementById("waitlist");
+			if (form) {
+				form.addEventListener("submit", function (ev) {
+					ev.preventDefault();
+					var msg = form.querySelector(".form-msg");
+					var btn = form.querySelector("button");
+					var data = Object.fromEntries(new FormData(form).entries());
+					data.ref = ref;
+					btn.disabled = true;
+					fetch("/api/waitlist", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(data) })
+						.then(function (r) { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+						.then(function () {
+							msg.textContent = "Thanks, you're on the list. We'll be in touch.";
+							form.reset();
+							if (window.cwTrack) window.cwTrack("Waitlist", { zip: data.zip });
+						})
+						.catch(function () {
+							msg.innerHTML = 'Something went wrong. Please email <a href="mailto:' + contactEmail + '?subject=Waitlist%20' + encodeURIComponent(data.zip || "") + '">' + contactEmail + "</a> and we'll add you.";
+						})
+						.finally(function () { btn.disabled = false; });
+				});
+			}
+		})();
+	</script>
+</Base>

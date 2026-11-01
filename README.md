@@ -1,64 +1,41 @@
-# Astro Starter Kit: Blog
+# City Wood: Hoboken firewood delivery
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/cloudflare/templates/tree/main/astro-blog-starter-template)
+The landing page for a firewood delivery subscription in Hoboken, NJ. It's one page, built with [Astro](https://astro.build) and deployed on Cloudflare.
 
-![Astro Template Preview](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
+- **Business context, goals and rules:** [`CLAUDE.md`](CLAUDE.md)
+- **Decision log:** [`docs/decisions.md`](docs/decisions.md)
+- **Changing the look or the words:** [`docs/EDITING.md`](docs/EDITING.md)
 
-<!-- dash-content-start -->
+## Where things live
 
-Create a blog with Astro and deploy it on Cloudflare Workers as a [static website](https://developers.cloudflare.com/workers/static-assets/).
+| File | What it controls |
+|---|---|
+| `src/styles/global.css` | **All design**: colors, fonts, spacing, roundness (variables at the top) |
+| `src/config.ts` | Business name, contact info, plans and prices, offer details, tracking IDs |
+| `src/pages/index.astro` | Page wording and section order (hero, how it works, plans, FAQ, …) |
+| `src/layouts/Base.astro` | `<head>`: fonts, meta tags, analytics scripts |
+| `src/pages/api/waitlist.ts` | Waitlist form endpoint (Cloudflare KV) |
+| `public/` | Images, favicon, social share image (`og.png`) |
 
-Features:
-
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
-- ✅ Built-in Observability logging
-
-<!-- dash-content-end -->
-
-## Getting Started
-
-Outside of this repo, you can start a new project with this template using [C3](https://developers.cloudflare.com/pages/get-started/c3/) (the `create-cloudflare` CLI):
+## Commands
 
 ```bash
-npm create cloudflare@latest -- --template=cloudflare/templates/astro-blog-starter-template
+npm install       # once
+npm run dev       # live preview at http://localhost:4321 (updates as you save)
+npm run build     # production build into ./dist
+npm run deploy    # deploy to Cloudflare (needs `npx wrangler login` once)
 ```
 
-A live public deployment of this template is available at [https://astro-blog-starter-template.templates.workers.dev](https://astro-blog-starter-template.templates.workers.dev)
+## Waitlist storage (one-time setup)
 
-## 🚀 Project Structure
+```bash
+npx wrangler kv namespace create WAITLIST
+```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Add the returned id to `wrangler.json`:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```json
+"kv_namespaces": [{ "binding": "WAITLIST", "id": "<id>" }]
+```
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                           | Action                                           |
-| :-------------------------------- | :----------------------------------------------- |
-| `npm install`                     | Installs dependencies                            |
-| `npm run dev`                     | Starts local dev server at `localhost:4321`      |
-| `npm run build`                   | Build your production site to `./dist/`          |
-| `npm run preview`                 | Preview your build locally, before deploying     |
-| `npm run astro ...`               | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help`         | Get help using the Astro CLI                     |
-| `npm run build && npm run deploy` | Deploy your production site to Cloudflare        |
-| `npm wrangler tail`               | View real-time logs for all Workers              |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Until this is done, the form falls back to asking people to email us, so no signup is silently lost.
