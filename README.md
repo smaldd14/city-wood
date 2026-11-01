@@ -2,7 +2,7 @@
 
 The landing page for a firewood delivery subscription in Hoboken, NJ. It's one page, built with [Astro](https://astro.build) and deployed on Cloudflare.
 
-- **Business context, goals and rules:** [`CLAUDE.md`](CLAUDE.md)
+- **Project brief:** [`docs/project-brief.md`](docs/project-brief.md) (also loaded as `CLAUDE.md` so Claude Code follows it)
 - **Decision log:** [`docs/decisions.md`](docs/decisions.md)
 - **Changing the look or the words:** [`docs/EDITING.md`](docs/EDITING.md)
 
